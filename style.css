@@ -1,0 +1,80 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f7fa;
+  color: #333;
+  margin: 0;
+}
+
+header {
+  background: #2b6cb0;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 2rem;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input, select, button {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+button {
+  background: #2b6cb0;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e4e8c;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.summary div {
+  flex: 1;
+  margin: 0 0.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.income { background: #c6f6d5; }
+.expense { background: #fed7d7; }
+.savings { background: #faf089; }
+
+canvas {
+  margin-top: 2rem;
+  width: 100%;
+}
