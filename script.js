@@ -69,8 +69,10 @@ form.addEventListener('submit', e => {
   const desc = document.getElementById('desc').value.trim();
   const amount = parseFloat(document.getElementById('amount').value);
   const type = document.getElementById('type').value;
-  const date = document.getElementById('date').value || new Date().toISOString().slice(0,7);
-  transactions.push({ desc, amount, type, date });
+  const dateInput = document.getElementById('date').value;
+const date = dateInput ? new Date(dateInput).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+transactions.push({ desc, amount, type, date });
+
   form.reset();
   render();
 });
