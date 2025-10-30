@@ -3,14 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Qureshi Finance Report</title>
+<title>Qureshi Finance Report (Secure Multi-User)</title>
 
 <link rel="manifest" href="manifest-blue.json" />
 <meta name="theme-color" content="#2b6cb0" />
 <link rel="icon" href="favicon.ico" />
-<link rel="stylesheet" href="style.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- ✅ SheetJS (Excel export library) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
@@ -28,18 +26,12 @@
     padding: 1rem;
   }
   main {
-    max-width: 800px;
+    max-width: 900px;
     margin: 2rem auto;
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     padding: 2rem;
-  }
-  form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
   }
   input, select, button {
     padding: 0.6rem;
@@ -62,83 +54,228 @@
     border-bottom: 1px solid #ddd;
     padding: 0.5rem;
   }
-  .summary {
+  #login-screen {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  #login-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 320px;
     text-align: center;
-    margin-top: 2rem;
   }
-  .summary div {
-    flex: 1;
-    margin: 0 0.5rem;
-    padding: 1rem;
-    border-radius: 8px;
+  #finance-app {
+    display: none;
   }
-  .income { background: #c6f6d5; }
-  .expense { background: #fed7d7; }
-  .savings { background: #faf089; }
-  canvas {
-    margin-top: 2rem;
+  #forgot-box {
+    display: none;
   }
 </style>
 </head>
 
 <body>
-  <header>
-    <h1>Qureshi Finance Report</h1>
-  </header>
+<header>
+  <h1>Qureshi Finance Report (Secure Multi-User)</h1>
+</header>
 
-<main>
-  <h2>Add Transaction</h2>
-
-  <form id="transaction-form">
-    <input id="desc" type="text" placeholder="Description" required />
-    <input id="amount" type="number" placeholder="Amount" required />
-    <select id="type" required>
-      <option value="income">Income</option>
-      <option value="expense">Expense</option>
-    </select>
-    <input id="date" type="date" required />
-    <button type="submit">Add</button>
-  </form>
-
-  <!-- ✅ Button to download Excel -->
-  <button id="exportExcel">Export to Excel</button>
-
-  <table id="transactions">
-    <thead>
-      <tr>
-        <th>Description</th>
-        <th>Type</th>
-        <th>Amount</th>
-        <th>Month</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <div class="summary">
-    <div class="income"><h3>Income</h3><p id="total-income">$0.00</p></div>
-    <div class="expense"><h3>Expenses</h3><p id="total-expense">$0.00</p></div>
-    <div class="savings"><h3>Savings</h3><p id="total-savings">$0.00</p></div>
+<!-- 🔐 LOGIN SCREEN -->
+<div id="login-screen">
+  <div id="login-box">
+    <h2>Login</h2>
+    <input id="username" type="text" placeholder="Username" required /><br><br>
+    <div style="position:relative;">
+      <input id="password" type="password" placeholder="Password" required style="width:80%;" />
+      <button id="togglePwd" type="button" style="position:absolute;right:0;">👁️</button>
+    </div><br>
+    <input id="secQuestion" type="text" placeholder="Security Question (new users only)" /><br><br>
+    <input id="secAnswer" type="text" placeholder="Answer (new users only)" /><br><br>
+    <button id="loginBtn">Login / Register</button><br><br>
+    <button id="forgotPwdBtn" style="background:#f6ad55;color:black;">Forgot Password?</button>
   </div>
 
-  <canvas id="pieChart"></canvas>
-  <canvas id="barChart"></canvas>
-</main>
+  <!-- 🔄 PASSWORD RESET BOX -->
+  <div id="forgot-box">
+    <h2>Reset Password</h2>
+    <input id="resetUser" type="text" placeholder="Username" /><br><br>
+    <input id="resetAnswer" type="text" placeholder="Security Answer" /><br><br>
+    <input id="newPassword" type="password" placeholder="New Password" /><br><br>
+    <button id="resetBtn">Reset Password</button><br><br>
+    <button id="backToLogin" style="background:#a0aec0;">Back to Login</button>
+  </div>
+</div>
+
+<!-- 💰 MAIN APP -->
+<div id="finance-app">
+  <main>
+    <h2 id="welcomeUser">Welcome</h2>
+
+    <form id="transaction-form">
+      <input id="desc" type="text" placeholder="Description" required />
+      <input id="amount" type="number" placeholder="Amount" required />
+      <select id="type" required>
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <input id="date" type="date" required />
+      <input id="remarks" type="text" placeholder="Remarks (optional)" />
+      <button type="submit">Add</button>
+    </form>
+
+    <button id="exportExcel">Export to Excel</button>
+    <button id="logoutBtn" style="background:#e53e3e;margin-left:1rem;">Logout</button>
+
+    <table id="transactions">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Remarks</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="summary">
+      <div class="income"><h3>Income</h3><p id="total-income">$0.00</p></div>
+      <div class="expense"><h3>Expenses</h3><p id="total-expense">$0.00</p></div>
+      <div class="savings"><h3>Savings</h3><p id="total-savings">$0.00</p></div>
+    </div>
+
+    <canvas id="pieChart"></canvas>
+    <canvas id="barChart"></canvas>
+  </main>
+</div>
 
 <script>
-const form = document.getElementById('transaction-form');
-const tbody = document.querySelector('#transactions tbody');
-const totalIncomeEl = document.getElementById('total-income');
-const totalExpenseEl = document.getElementById('total-expense');
-const totalSavingsEl = document.getElementById('total-savings');
-const pieCtx = document.getElementById('pieChart').getContext('2d');
-const barCtx = document.getElementById('barChart').getContext('2d');
-let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+// ---------- HASH UTILITY ----------
+async function hashText(text) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ---------- ELEMENTS ----------
+const loginScreen = document.getElementById('login-screen');
+const financeApp = document.getElementById('finance-app');
+const loginBox = document.getElementById('login-box');
+const forgotBox = document.getElementById('forgot-box');
+const welcomeUser = document.getElementById('welcomeUser');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const togglePwd = document.getElementById('togglePwd');
+const forgotPwdBtn = document.getElementById('forgotPwdBtn');
+const resetBtn = document.getElementById('resetBtn');
+const backToLogin = document.getElementById('backToLogin');
+
+let currentUser = null;
+let transactions = [];
+
+// ---------- TOGGLE PASSWORD ----------
+togglePwd.addEventListener('click', () => {
+  const pwd = document.getElementById('password');
+  pwd.type = pwd.type === 'password' ? 'text' : 'password';
+});
+
+// ---------- LOGIN / REGISTER ----------
+loginBtn.addEventListener('click', async () => {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const secQ = document.getElementById('secQuestion').value.trim();
+  const secA = document.getElementById('secAnswer').value.trim();
+
+  if (!username || !password) return alert('Please enter username and password.');
+
+  const userKey = `user_${username}`;
+  const userData = localStorage.getItem(userKey);
+  const hashedPwd = await hashText(password);
+
+  if (userData) {
+    const { hash, question, answer } = JSON.parse(userData);
+    if (hash !== hashedPwd) return alert('Incorrect password!');
+  } else {
+    if (!secQ || !secA) return alert('Set security question and answer for new user.');
+    const hashedAns = await hashText(secA);
+    localStorage.setItem(userKey, JSON.stringify({ hash: hashedPwd, question: secQ, answer: hashedAns }));
+    alert('✅ New user created securely!');
+  }
+
+  currentUser = username;
+  welcomeUser.textContent = `Welcome, ${username}`;
+  loginScreen.style.display = 'none';
+  financeApp.style.display = 'block';
+  loadData();
+  render();
+});
+
+// ---------- FORGOT PASSWORD FLOW ----------
+forgotPwdBtn.addEventListener('click', () => {
+  loginBox.style.display = 'none';
+  forgotBox.style.display = 'block';
+});
+
+backToLogin.addEventListener('click', () => {
+  forgotBox.style.display = 'none';
+  loginBox.style.display = 'block';
+});
+
+resetBtn.addEventListener('click', async () => {
+  const username = document.getElementById('resetUser').value.trim();
+  const answer = document.getElementById('resetAnswer').value.trim();
+  const newPass = document.getElementById('newPassword').value.trim();
+  if (!username || !answer || !newPass) return alert('Please fill all fields.');
+
+  const userKey = `user_${username}`;
+  const userData = localStorage.getItem(userKey);
+  if (!userData) return alert('User not found.');
+
+  const { question, answer: savedAns } = JSON.parse(userData);
+  const hashedAns = await hashText(answer);
+
+  if (hashedAns !== savedAns) return alert('Wrong security answer!');
+  const newHash = await hashText(newPass);
+  localStorage.setItem(userKey, JSON.stringify({ hash: newHash, question, answer: savedAns }));
+  alert('✅ Password reset successfully!');
+  backToLogin.click();
+});
+
+// ---------- LOGOUT ----------
+logoutBtn.addEventListener('click', () => {
+  currentUser = null;
+  transactions = [];
+  financeApp.style.display = 'none';
+  loginScreen.style.display = 'flex';
+  loginBox.style.display = 'block';
+  forgotBox.style.display = 'none';
+});
+
+// ---------- FINANCE APP ----------
+function saveData() {
+  localStorage.setItem(`financeData_${currentUser}`, JSON.stringify(transactions));
+}
+
+function loadData() {
+  const saved = localStorage.getItem(`financeData_${currentUser}`);
+  transactions = saved ? JSON.parse(saved) : [];
+}
 
 function render() {
+  const tbody = document.querySelector('#transactions tbody');
+  const totalIncomeEl = document.getElementById('total-income');
+  const totalExpenseEl = document.getElementById('total-expense');
+  const totalSavingsEl = document.getElementById('total-savings');
+  const pieCtx = document.getElementById('pieChart').getContext('2d');
+  const barCtx = document.getElementById('barChart').getContext('2d');
+
   tbody.innerHTML = '';
   let income = 0, expense = 0;
   const monthly = {};
@@ -150,93 +287,61 @@ function render() {
       <td>${t.type}</td>
       <td>$${t.amount.toFixed(2)}</td>
       <td>${new Date(t.date).toLocaleDateString()}</td>
-      <td><button onclick="deleteTransaction(${i})">❌</button></td>
-    `;
+      <td>${t.remarks || '-'}</td>
+      <td><button onclick="deleteTx(${i})">❌</button></td>`;
     tbody.appendChild(tr);
 
-    if (t.type === 'income') income += t.amount;
-    else expense += t.amount;
-
-    if (!monthly[t.date]) monthly[t.date] = { income: 0, expense: 0 };
-    monthly[t.date][t.type] += t.amount;
+    if (t.type === 'income') income += t.amount; else expense += t.amount;
+    const month = t.date.slice(0,7);
+    if (!monthly[month]) monthly[month] = { income:0, expense:0 };
+    monthly[month][t.type] += t.amount;
   });
 
   totalIncomeEl.textContent = `$${income.toFixed(2)}`;
   totalExpenseEl.textContent = `$${expense.toFixed(2)}`;
   totalSavingsEl.textContent = `$${(income - expense).toFixed(2)}`;
+  saveData();
 
-  localStorage.setItem('transactions', JSON.stringify(transactions));
-
-  // Charts
   if (window.pieChart) window.pieChart.destroy();
   window.pieChart = new Chart(pieCtx, {
     type: 'pie',
-    data: {
-      labels: ['Income', 'Expense'],
-      datasets: [{
-        data: [income, expense],
-        backgroundColor: ['#48bb78', '#f56565']
-      }]
-    }
+    data: { labels: ['Income','Expense'], datasets: [{ data:[income,expense], backgroundColor:['#48bb78','#f56565'] }] }
   });
 
   if (window.barChart) window.barChart.destroy();
   const months = Object.keys(monthly);
-  const incData = months.map(m => monthly[m].income);
-  const expData = months.map(m => monthly[m].expense);
+  const inc = months.map(m => monthly[m].income);
+  const exp = months.map(m => monthly[m].expense);
   window.barChart = new Chart(barCtx, {
-    type: 'bar',
-    data: {
-      labels: months,
-      datasets: [
-        { label: 'Income', data: incData, backgroundColor: '#68d391' },
-        { label: 'Expense', data: expData, backgroundColor: '#fc8181' }
-      ]
-    }
+    type:'bar',
+    data:{ labels:months, datasets:[
+      { label:'Income', data:inc, backgroundColor:'#68d391' },
+      { label:'Expense', data:exp, backgroundColor:'#fc8181' }
+    ]}
   });
 }
 
-form.addEventListener('submit', e => {
+document.getElementById('transaction-form').addEventListener('submit', e => {
   e.preventDefault();
   const desc = document.getElementById('desc').value.trim();
   const amount = parseFloat(document.getElementById('amount').value);
   const type = document.getElementById('type').value;
-  const date = document.getElementById('date').value || new Date().toISOString().slice(0,7);
-  transactions.push({ desc, amount, type, date });
-  form.reset();
+  const remarks = document.getElementById('remarks').value.trim();
+  const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
+  transactions.push({ desc, amount, type, date, remarks });
+  e.target.reset();
   render();
 });
 
-function deleteTransaction(i) {
-  transactions.splice(i, 1);
-  render();
-}
+function deleteTx(i) { transactions.splice(i,1); render(); }
 
-// ✅ EXPORT TO EXCEL FUNCTION
-document.getElementById('exportExcel').addEventListener('click', () => {
-  if (transactions.length === 0) {
-    alert("No transactions to export!");
-    return;
-  }
-
-  // Convert to Excel worksheet
-  const ws = XLSX.utils.json_to_sheet(transactions);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Transactions");
-
-  // Trigger download
-  XLSX.writeFile(wb, "Qureshi_Finance_Report.xlsx");
+document.getElementById('exportExcel').addEventListener('click',()=>{
+  if(transactions.length===0)return alert('No transactions!');
+  const ws=XLSX.utils.json_to_sheet(transactions);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Transactions");
+  XLSX.writeFile(wb,`${currentUser}_Finance_Report.xlsx`);
 });
-
-// Service Worker (optional PWA feature)
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-
-render();
 </script>
 </body>
 </html>
-
-
-
