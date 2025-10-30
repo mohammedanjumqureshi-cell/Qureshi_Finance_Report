@@ -149,7 +149,7 @@ function render() {
       <td>${t.desc}</td>
       <td>${t.type}</td>
       <td>$${t.amount.toFixed(2)}</td>
-      <td>${t.date || '-'}</td>
+      <td>${new Date(t.date).toLocaleDateString()}</td>
       <td><button onclick="deleteTransaction(${i})">❌</button></td>
     `;
     tbody.appendChild(tr);
@@ -237,5 +237,6 @@ render();
 </script>
 </body>
 </html>
+
 
 
